@@ -1,14 +1,12 @@
 'use client'
 
-import { login } from '@/services/login'
+import { cadastro } from '@/services/cadastro'
 import type { FormEvent } from 'react'
 import { useServerAction } from 'zsa-react'
 import { useRouter } from 'next/navigation'
 
-import { AiOutlineLoading } from 'react-icons/ai'
-
 export default function Login() {
-  const { execute, isPending } = useServerAction(login)
+  const { execute } = useServerAction(cadastro)
   const router = useRouter()
 
   async function handleLogin(event: FormEvent) {
@@ -16,9 +14,11 @@ export default function Login() {
     const form = event.currentTarget as EventTarget & HTMLFormElement
     const formData = new FormData(form)
     const [data, err] = await execute({
+      name: formData.get('name') as string,
       email: formData.get('email') as string,
       password: formData.get('password') as string,
     })
+
     if (err) {
       console.log('Erro ao criar tarefa', err)
       return
@@ -32,14 +32,6 @@ export default function Login() {
     }
   }
 
-  if (isPending) {
-    return (
-      <div className="flex justify-center items-center w-full min-h-screen">
-        <AiOutlineLoading className="animate-spin w-10 h-10" />
-      </div>
-    )
-  }
-
   return (
     <div className="flex flex-col items-center w-full h-[700px]">
       <div className="flex flex-col gap-5 justify-center items-center w-full h-1/4 p-10">
@@ -51,6 +43,15 @@ export default function Login() {
           onSubmit={handleLogin}
           className="flex flex-col w-full max-w-[500px] items-center gap-10"
         >
+          <div className="flex flex-col gap-1 w-full">
+            <h1 className="font-semibold text-lg">Digite seu nome:</h1>
+            <input
+              name="name"
+              type="text"
+              placeholder="Nome"
+              className="w-full p-3 rounded-md border"
+            />
+          </div>
           <div className="flex flex-col gap-1 w-full">
             <h1 className="font-semibold text-lg">E-mail:</h1>
             <input
@@ -78,11 +79,11 @@ export default function Login() {
           <div className="flex flex-col text-center items-center gap-1.5">
             <p className="text-sm font-medium flex gap-1">
               <span>------------</span>
-              <span>Caso não tenha uma conta</span>
+              <span>Caso já tenha uma conta</span>
               <span>------------</span>
             </p>
-            <a href="/cadastro" className="text-sm font-semibold text-blue-600">
-              Cadastrar-se
+            <a href="/" className="text-sm font-semibold text-blue-600">
+              Voltar para o login
             </a>
           </div>
         </form>
