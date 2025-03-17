@@ -1,3 +1,5 @@
+'use client'
+
 import { Alert } from '../alert'
 
 import { useServerAction } from 'zsa-react'
@@ -57,7 +59,7 @@ export function FormAction() {
           Cadastrar cliente
         </button>
       </form>
-      <Alert dialog={isSuccess} id={data?.userId} />
+      <Alert dialog={isSuccess} id={data?.userId as string} />
     </div>
   )
 }

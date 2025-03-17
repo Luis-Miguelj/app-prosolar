@@ -4,9 +4,10 @@ import { cadastro } from '@/services/cadastro'
 import type { FormEvent } from 'react'
 import { useServerAction } from 'zsa-react'
 import { useRouter } from 'next/navigation'
+import { AiOutlineLoading } from 'react-icons/ai'
 
 export default function Login() {
-  const { execute } = useServerAction(cadastro)
+  const { execute, isSuccess } = useServerAction(cadastro)
   const router = useRouter()
 
   async function handleLogin(event: FormEvent) {
@@ -30,6 +31,14 @@ export default function Login() {
       router.push('/home')
       form.reset()
     }
+  }
+
+  if (isSuccess) {
+    return (
+      <div className="flex justify-center items-center w-full min-h-screen">
+        <AiOutlineLoading className="animate-spin w-10 h-10" />
+      </div>
+    )
   }
 
   return (

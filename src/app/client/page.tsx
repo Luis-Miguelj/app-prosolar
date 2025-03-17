@@ -1,8 +1,6 @@
-'use client'
-
 import { FormAction } from '@/components/form/form-action'
 
-export default function Client() {
+export default async function Client() {
   return (
     <>
       <FormAction />

@@ -9,22 +9,26 @@ import Link from 'next/link'
 import dayjs from 'dayjs'
 import 'dayjs/locale/pt-br'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { BtnDialogEditClient } from '@/components/btn-dialog-edit-client'
+import { BtnDialogEditClient } from '@/components/buttons/btn-dialog-edit-client'
 
 dayjs.extend(relativeTime)
 
 export default async function Services({ params }: Params) {
   const { tasks } = await getServices(
-    `http://localhost:3005/tasks/${params.id}`
+    `http://localhost:3005/tasks/${params.id}`,
+    ['tasks']
   )
   const { client } = await getServices(
-    `http://localhost:3005/client/${params.id}`
+    `http://localhost:3005/client/${params.id}`,
+    ['client']
   )
 
   return (
     <div className="px-4 py-2 flex flex-col gap-4">
       <div className="flex justify-between items-baseline bg-zinc-950 text-white p-4 rounded-md w-full">
-        <h1 className="text-xl font-semibold">Cliente: {client?.name}</h1>
+        <h1 className="text-xl font-semibold w-40 truncate">
+          Cliente: {client?.name}
+        </h1>
         <Link
           className="text-lg font-medium py-1 px-2 rounded bg-zinc-800"
           href={`/services/new-task/${client.id}`}
@@ -60,6 +64,10 @@ export default async function Services({ params }: Params) {
                     <span className="font-bold text-lg">Observações: </span>
                     {task.obs}
                   </p>
+                  <p className="break-words">
+                    <span className="font-bold text-lg">Status: </span>
+                    {task.status}
+                  </p>
                   <StatusDeObra id={task.id} />
                 </div>
                 <div>
@@ -69,7 +77,12 @@ export default async function Services({ params }: Params) {
             </div>
           ))}
         </div>
-        <BtnDialogEditClient id={params.id} />
+        <BtnDialogEditClient
+          id={params.id}
+          name={client?.name}
+          city={client?.city}
+          status={client?.status}
+        />
       </div>
     </div>
   )

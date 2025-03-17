@@ -15,6 +15,7 @@ import {
 } from './ui/drawer'
 
 import { IoMenu } from 'react-icons/io5'
+import { Logout } from './logout'
 
 export function Header() {
   const pathname = usePathname()
@@ -33,6 +34,9 @@ export function Header() {
         break
       case `/services/${id}`:
         setPath('Serviços')
+        break
+      case `/services/${id}/partial-completion`:
+        setPath('Finalização Parcial')
         break
       case '/services/new-task':
         setPath('Nova Tarefa')
@@ -85,7 +89,7 @@ export function Header() {
               </div>
             </div>
             <DrawerFooter className="w-full flex justify-end items-end">
-              <h1>Sair</h1>
+              <Logout />
             </DrawerFooter>
           </DrawerContent>
         </Drawer>

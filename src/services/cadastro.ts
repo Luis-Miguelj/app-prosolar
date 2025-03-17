@@ -2,6 +2,7 @@
 import { z } from 'zod'
 import { createServerAction } from 'zsa'
 import { cookies } from 'next/headers'
+import bcrypt from 'bcrypt'
 
 export const cadastro = createServerAction()
   .input(
@@ -26,12 +27,17 @@ export const cadastro = createServerAction()
       })
       const data = await response.json()
 
+      const cookieId = cookies().set('_', data.userId, {
+        httpOnly: true,
+        maxAge: 5 * 86400,
+      })
+
       const cookie = cookies().set('token', data.token, {
         httpOnly: true,
         maxAge: 5 * 86400,
       })
 
-      if (cookie) {
+      if (cookie && cookieId) {
         console.log('Usuário criado com sucesso')
         return { tokenSuccess: true }
       }

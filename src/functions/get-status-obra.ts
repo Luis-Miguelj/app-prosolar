@@ -6,7 +6,7 @@ export async function getStatusObra(id: string) {
     },
     next: {
       tags: ['obras'],
-      revalidate: false,
+      revalidate: 0,
     },
   })
 

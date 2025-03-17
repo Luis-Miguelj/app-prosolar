@@ -20,6 +20,8 @@ interface AlertProps {
 export function Alert({ dialog, id }: AlertProps) {
   const routes = useRouter()
 
+  console.log('id: ', id)
+
   return (
     <AlertDialog open={dialog}>
       <AlertDialogContent className="bg-zinc-950 border-zinc-800 w-5/6 rounded-md">

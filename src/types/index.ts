@@ -40,3 +40,17 @@ export interface Status {
     }
   }
 }
+
+export interface ClientProps {
+  id: string
+  name: string
+  city: string
+  status: string
+}
+
+export type PartialCompleted = {
+  id: string
+  inicio: Date
+  fim: Date
+  taskId: string
+}

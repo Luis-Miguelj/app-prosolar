@@ -1,23 +1,28 @@
 'use client'
 import { completedTask } from '@/services/completed-task'
 import { obras } from '@/services/obras'
-import type { Status } from '@/types'
-import { useEffect, useState, type FormEvent } from 'react'
+import type { PartialCompleted, Status } from '@/types'
+import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import { useServerAction } from 'zsa-react'
 
 type ButtonStatusObraProps = {
   id: string
   clientId: string
   status: Status
+  // partialCompleted: PartialCompleted[]
 }
 
 export function ButtonStatusObra({
   id,
   clientId,
   status,
+  // partialCompleted,
 }: ButtonStatusObraProps) {
   const [url, setUrl] = useState<string>('')
   const [statusType, setStatusType] = useState<string>('')
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [partialCompletedDate, setPartialCompletedDate] =
+    useState<PartialCompleted>()
 
   const { execute: executeObra, data, error } = useServerAction(obras)
   const { execute: executeCompletedTask } = useServerAction(completedTask)
@@ -38,19 +43,21 @@ export function ButtonStatusObra({
     }
   }
 
-  async function handleStatus() {
+  const handleStatus = useCallback(async () => {
     if (!status.obra.inicioDeObra.inicio) {
       setUrl(`http://localhost:3005/obras/start/${id}`)
-      return 'Iniciar obra'
+      return 'Indo ao cliente'
     }
 
     if (!status.obra.inicioDeObra.fim) {
       setUrl(`http://localhost:3005/obra/update/${status.obra.inicioDeObra.id}`)
-      return 'Chegada no cliente'
+
+      return 'Iniciar obra'
     }
 
     if (!status.obra.fimDeObra.inicio) {
       setUrl(`http://localhost:3005/obras/end/${id}`)
+
       return 'Saindo do cliente'
     }
 
@@ -61,14 +68,43 @@ export function ButtonStatusObra({
     }
 
     return 'Finalizado'
-  }
+  }, [id, status.obra])
+
+  // useEffect(() => {
+  //   partialCompleted.map(item => {
+  //     setPartialCompletedDate(item)
+  //   })
+  // }, [partialCompleted])
 
   useEffect(() => {
-    handleStatus().then(data => setStatusType(data))
-  })
+    handleStatus().then(data => {
+      setStatusType(data)
+      setIsLoading(true)
+    })
+  }, [handleStatus])
+
+  if (!isLoading) {
+    return (
+      <p className="text-zinc-950 bg-zinc-200 w-full text-center font-semibold text-base p-2 rounded-md">
+        Carregando...
+      </p>
+    )
+  }
+
+  if (partialCompletedDate?.inicio && partialCompletedDate?.fim) {
+    return (
+      <button
+        type="button"
+        disabled
+        className="text-zinc-950 bg-zinc-200 w-full text-base p-2 rounded-md"
+      >
+        Tarefa parcialmente finalizada
+      </button>
+    )
+  }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="w-60">
       <button
         type="submit"
         className={`text-zinc-950 bg-white ${statusType !== 'Finalizado' && 'hover:bg-zinc-200'} transition-all w-full border p-2 rounded-md`}

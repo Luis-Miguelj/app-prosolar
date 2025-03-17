@@ -26,3 +26,19 @@ export function validatorStatus(status: string) {
       return status
   }
 }
+
+export function validatorStatusClient(status: string) {
+  switch (status) {
+    case 'Em andamento':
+      return 'a'
+
+    case 'Completo':
+      return 'c'
+
+    case 'Incompleto':
+      return 'i'
+
+    default:
+      return status
+  }
+}

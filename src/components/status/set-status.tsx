@@ -1,10 +1,12 @@
-import type { Status } from '@/types'
+import type { PartialCompleted, Status } from '@/types'
 import { ButtonStatusObra } from './button-status-obra'
+import { OptionsTask } from '../buttons/options-task'
 
 export async function SetStatus({
   id,
   clientId,
 }: { id: string; clientId: string }) {
+  console.log(id)
   const response = await fetch(`http://localhost:3005/obra/status/${id}`, {
     method: 'GET',
     headers: {
@@ -19,8 +21,9 @@ export async function SetStatus({
   const status: Status = await response.json()
 
   return (
-    <div>
+    <div className="flex gap-2">
       <ButtonStatusObra clientId={clientId} id={id} status={status} />
+      <OptionsTask taskId={id} />
     </div>
   )
 }

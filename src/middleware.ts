@@ -31,8 +31,6 @@ export const config = {
     '/home',
     '/client',
     '/services',
-    '/services/:id',
-    '/services/new-task',
-    '/services/new-task/:id',
+    '/services/:path*',
   ],
 }
